@@ -29,17 +29,21 @@ class AppleMusicTokenGenerator(private val appSettings: AppSettings) {
    * @return The developer token, to be used as bearer token
    * @throws com.auth0.jwt.exceptions.JWTCreationException
    */
-  fun generateToken(): String {
+  fun generateToken(): DeveloperToken {
     val algorithm = Algorithm.ECDSA256(P8KeyProvider(appSettings.appleMusic))
 
     val issuedAt = LocalDateTime.now()
-    val expiresAt = issuedAt.plusHours(12)
 
-    return JWT.create()
+    // According to online sources tokens can be valid for max 6 months
+    val expiresAt = issuedAt.plusMonths(6).minusDays(1)
+
+    val jwt = JWT.create()
       .withIssuer(appSettings.appleMusic.teamId)
       .withIssuedAt(Date.from(issuedAt.toInstant(ZoneOffset.UTC)))
       .withExpiresAt(Date.from(expiresAt.toInstant(ZoneOffset.UTC)))
       .sign(algorithm)!!
+
+    return DeveloperToken(jwt, expiresAt)
   }
 
   private class P8KeyProvider(private val appleMusic: AppleMusic) : ECDSAKeyProvider {

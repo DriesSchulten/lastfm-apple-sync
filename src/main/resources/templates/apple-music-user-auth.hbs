@@ -12,7 +12,7 @@
 
 <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
   <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-    <div class="absolute inset-0 bg-gradient-to-r from-red-100 to-red-400 shadow-lg transform skew-y-12 sm:skew-y-0 sm:rotate-12 sm:rounded-3xl"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-red-100 to-red-200 shadow-lg transform skew-y-12 sm:skew-y-0 sm:rotate-12 sm:rounded-3xl"></div>
     <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20 space-y-6">
       <h1>Apple Music connection</h1>
       <p id="sign-in-help" class="py-6">
@@ -27,12 +27,10 @@
         </p>
       </div>
       <div>
-        <button id="sign-in"
-                class="px-4 py-2 bg-red-500 text-white hover:text-red-500 hover:bg-white rounded-2xl shadow-md">Sign In
+        <button id="sign-in" class="px-4 py-2 bg-red-500 text-white hover:text-red-500 hover:bg-white rounded-2xl shadow-md">Sign In
           to Apple Music
         </button>
-        <button id="sign-out"
-                class="px-4 py-2 bg-red-500 text-white hover:text-red-500 hover:bg-white rounded-2xl shadow-md hidden">
+        <button id="sign-out" class="px-4 py-2 bg-red-500 text-white hover:text-red-500 hover:bg-white rounded-2xl shadow-md hidden">
           Sign Out of Apple Music
         </button>
       </div>
@@ -57,18 +55,40 @@
       signOutHelp.classList.toggle('hidden');
     };
 
+    const sendToken = () => {
+      const data = {
+        'token': music.musicUserToken,
+        'storefrontId': music.storefrontId
+      };
+
+      const options = {
+        method: 'POST',
+        headers: new Headers({'content-type': 'application/json'}),
+        body: JSON.stringify(data)
+      }
+
+      fetch('apple-music/user-token', options).then(response => console.log(`Send token: ${response.ok}`));
+    }
+
+    const deleteToken = () => {
+      fetch('apple-music/user-token', {method: 'DELETE'}).then(response => console.log(`Delete token: ${response.ok}`));
+    };
+
     if (music.isAuthorized) {
       toggleButtons();
+      sendToken();
     }
 
     signIn.onclick = () => {
       music.authorize().then(() => {
+        sendToken();
         toggleButtons();
       });
     };
 
     signOut.onclick = () => {
       music.unauthorize().then(() => {
+        deleteToken();
         toggleButtons();
       });
     };

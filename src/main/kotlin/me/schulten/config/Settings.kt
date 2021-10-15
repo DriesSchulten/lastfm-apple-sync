@@ -2,7 +2,8 @@ package me.schulten.config
 
 data class AppSettings(
   val lastFm: LastFm,
-  val appleMusic: AppleMusic
+  val appleMusic: AppleMusic,
+  val storage: Storage
 )
 
 data class LastFm(
@@ -16,4 +17,8 @@ data class AppleMusic(
   val teamId: String,
   val keyId: String,
   val keyFile: String
+)
+
+data class Storage(
+  val directory: String
 )
