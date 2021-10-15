@@ -12,9 +12,19 @@ import me.schulten.config.AppSettings
 import java.security.MessageDigest
 
 /**
- * @author dries
+ * Last.fm related API functions
  */
-class LastFmClient(private val appSettings: AppSettings) {
+interface LastFmClient {
+  /**
+   * Fetches top albums for a given user id, handles paging internally (i.e. fetches all pages as 1 list)
+   * @param user The Last.fm username
+   * @param period The desired period
+   * @return The users top albums
+   */
+  suspend fun getTopAlbums(user: String, period: Period = Period.WEEK): List<Album>
+}
+
+class LastFmClientImpl(private val appSettings: AppSettings) : LastFmClient {
 
   private val httpClient = HttpClient(CIO) {
     install(JsonFeature) {
@@ -53,7 +63,7 @@ class LastFmClient(private val appSettings: AppSettings) {
     return session.key
   }
 
-  suspend fun getTopAlbums(user: String, period: Period = Period.WEEK): List<Album> {
+  override suspend fun getTopAlbums(user: String, period: Period): List<Album> {
     tailrec suspend fun getTopAlbums(
       page: Int,
       results: List<Album>,

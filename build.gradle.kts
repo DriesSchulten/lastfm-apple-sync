@@ -1,4 +1,7 @@
 val ktorVersion: String = "1.6.4"
+val koinVersion: String = "3.1.2"
+val logbackVersion: String = "1.2.6"
+val kotlinVersion: String = "1.5.31"
 
 plugins {
   kotlin("jvm") version "1.5.31"
@@ -20,18 +23,26 @@ repositories {
 }
 
 dependencies {
-  implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.9")
+  implementation("io.ktor:ktor-server-core:$ktorVersion")
+  implementation("io.ktor:ktor-server-netty:$ktorVersion")
+  implementation("io.ktor:ktor-serialization:$ktorVersion")
+  implementation("io.ktor:ktor-mustache:$ktorVersion")
+
+  implementation("io.insert-koin:koin-core:$koinVersion")
+  implementation("io.insert-koin:koin-ktor:$koinVersion")
+  implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
 
   implementation("io.ktor:ktor-client-cio:$ktorVersion")
   implementation("io.ktor:ktor-client-serialization:$ktorVersion")
 
-  implementation("com.github.ajalt.clikt:clikt:3.3.0")
+  implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.9")
 
-  testImplementation(kotlin("test"))
-}
+  implementation("com.auth0:java-jwt:3.18.2")
 
-tasks.test {
-  useJUnit()
+  implementation("ch.qos.logback:logback-classic:$logbackVersion")
+
+  testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
+  testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
 }
 
 application {
