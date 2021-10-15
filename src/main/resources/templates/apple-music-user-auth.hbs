@@ -1,0 +1,20 @@
+<html>
+<head>
+  <link href="assets/main.css" rel="stylesheet" type="text/css">
+  <title>Authorize Apple Music</title>
+
+  <meta name="apple-music-developer-token" content="{{model.developerToken}}">
+  <meta name="apple-music-app-name" content="Last.fm to Apple Music sync">
+  <meta name="apple-music-app-build" content="0.0.1">
+</head>
+<body>
+<div>
+  <h1>Authorize Apple Music</h1>
+  <div>
+    <button id="apple-music-authorize"></button>
+    <button id="apple-music-unauthorize"></button>
+  </div>
+</div>
+<script src="https://js-cdn.music.apple.com/musickit/v1/musickit.js"></script>
+</body>
+</html>

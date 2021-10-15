@@ -46,5 +46,5 @@ dependencies {
 }
 
 application {
-  mainClass.set("me.schulten.SyncClientKt")
+  mainClass.set("me.schulten.ApplicationKt")
 }
