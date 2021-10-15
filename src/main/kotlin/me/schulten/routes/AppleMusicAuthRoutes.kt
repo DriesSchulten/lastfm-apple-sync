@@ -7,9 +7,7 @@ import io.ktor.application.log
 import io.ktor.http.HttpStatusCode
 import io.ktor.mustache.MustacheContent
 import io.ktor.response.respond
-import io.ktor.routing.Route
-import io.ktor.routing.get
-import io.ktor.routing.routing
+import io.ktor.routing.*
 import me.schulten.applemusic.AppleMusicTokenGenerator
 import me.schulten.routes.viewmodels.AppleMusicUserAuthViewModel
 import org.koin.ktor.ext.inject
@@ -29,8 +27,20 @@ fun Route.appleMusicUserAuth() {
   }
 }
 
+fun Route.registerAppleMusicUserToken() {
+  post("/apple-music/user-token") {
+
+  }
+}
+
+fun Route.deleteAppleMusicUserToken() {
+  delete("/apple-music/user-token") {}
+}
+
 fun Application.registerAppleMusicAuthRoutes() {
   routing {
     appleMusicUserAuth()
+    registerAppleMusicUserToken()
+    deleteAppleMusicUserToken()
   }
 }

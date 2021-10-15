@@ -1,6 +1,7 @@
 <html>
 <head>
   <link href="assets/main.css" rel="stylesheet" type="text/css">
+
   <title>Authorize Apple Music</title>
 
   <meta name="apple-music-developer-token" content="{{model.developerToken}}">
@@ -16,5 +17,26 @@
   </div>
 </div>
 <script src="https://js-cdn.music.apple.com/musickit/v1/musickit.js"></script>
+<script type="text/javascript">
+  document.addEventListener('musickitloaded', () => {
+    let music = MusicKit.getInstance();
+
+    music.addEventListener(MusicKit.Events.authorizationStatusDidChange, (evt) => {
+      if (evt.authorizationStatus === 3) {
+        music.authorize().then(() => {
+          console.log(music.musicUserToken);
+          console.log(music.storefrontId);
+        });
+      } else {
+
+      }
+    })
+
+    if (music.isAuthorized) {
+      console.log(music.musicUserToken);
+      console.log(music.storefrontId);
+    }
+  })
+</script>
 </body>
 </html>
