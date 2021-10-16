@@ -9,13 +9,11 @@ import io.ktor.mustache.MustacheContent
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.*
-import kotlinx.serialization.ExperimentalSerializationApi
 import me.schulten.applemusic.AppleMusicCredentialHelper
 import me.schulten.applemusic.UserToken
 import me.schulten.routes.viewmodels.AppleMusicUserAuthViewModel
 import org.koin.ktor.ext.inject
 
-@ExperimentalSerializationApi
 fun Route.appleMusicUserAuth() {
   val credentialHelper by inject<AppleMusicCredentialHelper>()
 
@@ -31,28 +29,25 @@ fun Route.appleMusicUserAuth() {
   }
 }
 
-@ExperimentalSerializationApi
 fun Route.registerAppleMusicUserToken() {
   val credentialHelper by inject<AppleMusicCredentialHelper>()
 
   post("/apple-music/user-token") {
     val userToken = call.receive<UserToken>()
     credentialHelper.updateUserToken(userToken)
-    call.respond("Ok")
+    call.respond(HttpStatusCode.NoContent)
   }
 }
 
-@ExperimentalSerializationApi
 fun Route.deleteAppleMusicUserToken() {
   val credentialHelper by inject<AppleMusicCredentialHelper>()
 
   delete("/apple-music/user-token") {
     credentialHelper.deleteUserToken()
-    call.respond("Ok")
+    call.respond(HttpStatusCode.NoContent)
   }
 }
 
-@ExperimentalSerializationApi
 fun Application.registerAppleMusicAuthRoutes() {
   routing {
     appleMusicUserAuth()

@@ -15,6 +15,10 @@ kotlin {
   }
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+  kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi"
+}
+
 group = "me.schulten"
 version = "1.0-SNAPSHOT"
 
@@ -35,9 +39,11 @@ dependencies {
   implementation("io.ktor:ktor-client-cio:$ktorVersion")
   implementation("io.ktor:ktor-client-serialization:$ktorVersion")
 
-  implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.9")
+  implementation("com.github.ben-manes.caffeine:caffeine:3.0.4")
 
   implementation("com.auth0:java-jwt:3.18.2")
+
+  implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.9")
 
   implementation("ch.qos.logback:logback-classic:$logbackVersion")
 

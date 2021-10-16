@@ -9,10 +9,22 @@ import io.ktor.response.respond
 import io.ktor.routing.Route
 import io.ktor.routing.get
 import io.ktor.routing.routing
+import me.schulten.applemusic.AppleMusicClient
+import org.koin.ktor.ext.inject
 
 fun Route.index() {
   get("/") {
     call.respond(MustacheContent("index.hbs", null))
+  }
+}
+
+fun Route.search() {
+  val appleMusicClient by inject<AppleMusicClient>()
+
+  get("/search/{search}") {
+    val name = call.parameters["search"]!!
+    val results = appleMusicClient.searchAlbum(name)
+    call.respond(results)
   }
 }
 
@@ -26,5 +38,6 @@ fun Application.registerMainRoutes() {
   routing {
     index()
     static()
+    search()
   }
 }

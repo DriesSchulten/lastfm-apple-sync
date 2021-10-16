@@ -8,6 +8,21 @@ import me.schulten.util.LocalDateTimeSerializer
 import java.time.LocalDateTime
 
 @Serializable
+data class SearchResponse(val results: SearchResults)
+
+@Serializable
+data class SearchResults(val albums: ResultContainer<Album>)
+
+@Serializable
+data class ResultContainer<E>(val data: List<E>, val href: String, val next: String? = null)
+
+@Serializable
+data class Album(val id: String, val href: String, val attributes: AlbumAttributes)
+
+@Serializable
+data class AlbumAttributes(val name: String, val artistName: String, val isSingle: Boolean)
+
+@Serializable
 data class AppleMusicTokens(
   val developerToken: String,
   val developerTokenExpires: LocalDateTime,

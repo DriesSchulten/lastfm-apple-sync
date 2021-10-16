@@ -1,6 +1,5 @@
 package me.schulten.applemusic
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -18,7 +17,6 @@ import kotlin.io.path.notExists
  *
  * @author dries
  */
-@ExperimentalSerializationApi
 class AppleMusicCredentialHelper(private val appSettings: AppSettings, private val tokenGenerator: AppleMusicTokenGenerator) {
 
   private var tokens: AppleMusicTokens? = null

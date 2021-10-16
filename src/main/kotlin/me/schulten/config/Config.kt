@@ -7,7 +7,6 @@ import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
 import io.ktor.mustache.Mustache
 import io.ktor.serialization.json
-import kotlinx.serialization.ExperimentalSerializationApi
 import me.schulten.applemusic.appleMusicModule
 import me.schulten.lastfm.lastFmModule
 import me.schulten.routes.registerAppleMusicAuthRoutes
@@ -16,7 +15,6 @@ import org.koin.dsl.module
 import org.koin.ktor.ext.Koin
 import org.koin.logger.slf4jLogger
 
-@ExperimentalSerializationApi
 fun Application.config() {
   configureDI()
   configureSerialization()
