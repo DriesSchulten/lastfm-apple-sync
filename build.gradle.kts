@@ -38,6 +38,7 @@ dependencies {
 
   implementation("io.ktor:ktor-client-cio:$ktorVersion")
   implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+  implementation("io.ktor:ktor-client-logging:$ktorVersion")
 
   implementation("com.github.ben-manes.caffeine:caffeine:3.0.4")
 
@@ -46,6 +47,7 @@ dependencies {
   implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.9")
 
   implementation("ch.qos.logback:logback-classic:$logbackVersion")
+  implementation("io.github.microutils:kotlin-logging:2.0.11")
 
   testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
   testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")

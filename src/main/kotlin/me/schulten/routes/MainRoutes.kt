@@ -2,6 +2,7 @@ package me.schulten.routes
 
 import io.ktor.application.Application
 import io.ktor.application.call
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.files
 import io.ktor.http.content.static
 import io.ktor.mustache.MustacheContent
@@ -10,6 +11,7 @@ import io.ktor.routing.Route
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import me.schulten.applemusic.AppleMusicClient
+import me.schulten.sync.SyncService
 import org.koin.ktor.ext.inject
 
 fun Route.index() {
@@ -18,13 +20,12 @@ fun Route.index() {
   }
 }
 
-fun Route.search() {
-  val appleMusicClient by inject<AppleMusicClient>()
+fun Route.sync() {
+  val syncService by inject<SyncService>()
 
-  get("/search/{search}") {
-    val name = call.parameters["search"]!!
-    val results = appleMusicClient.searchAlbum(name)
-    call.respond(results)
+  get("/sync") {
+    syncService.sync()
+    call.respond(HttpStatusCode.NoContent)
   }
 }
 
@@ -38,6 +39,6 @@ fun Application.registerMainRoutes() {
   routing {
     index()
     static()
-    search()
+    sync()
   }
 }

@@ -7,6 +7,8 @@ import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
 import kotlinx.serialization.json.Json
 import me.schulten.config.AppSettings
@@ -25,6 +27,12 @@ interface AppleMusicClient {
    * @return The [ResultContainer] containing found [Album]s
    */
   suspend fun searchAlbum(name: String, offset: Int? = null): ResultContainer<Album>
+
+  /**
+   * Add albums to the users library
+   * @param ids The Apple Music albums ids to add to the library
+   */
+  suspend fun addAlbumsToLibrary(ids: List<String>)
 }
 
 class AppleMusicClientImpl(private val appSettings: AppSettings, private val credentialHelper: AppleMusicCredentialHelper) : AppleMusicClient {
@@ -50,5 +58,15 @@ class AppleMusicClientImpl(private val appSettings: AppSettings, private val cre
     }
 
     return response.results.albums
+  }
+
+  override suspend fun addAlbumsToLibrary(ids: List<String>) {
+    httpClient.post<HttpResponse>("${appleMusic.baseUrl}me/library") {
+      parameter("ids[albums]", ids.joinToString(","))
+      headers {
+        append(HttpHeaders.Authorization, "Bearer ${credentialHelper.developerToken}")
+        append("Music-User-Token", credentialHelper.userToken)
+      }
+    }
   }
 }

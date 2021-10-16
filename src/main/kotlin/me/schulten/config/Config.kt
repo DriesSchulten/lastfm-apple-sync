@@ -11,6 +11,7 @@ import me.schulten.applemusic.appleMusicModule
 import me.schulten.lastfm.lastFmModule
 import me.schulten.routes.registerAppleMusicAuthRoutes
 import me.schulten.routes.registerMainRoutes
+import me.schulten.sync.syncModule
 import org.koin.dsl.module
 import org.koin.ktor.ext.Koin
 import org.koin.logger.slf4jLogger
@@ -46,6 +47,6 @@ fun Application.configureDI() {
 
   install(Koin) {
     slf4jLogger()
-    modules(applicationModule, appleMusicModule, lastFmModule)
+    modules(applicationModule, appleMusicModule, lastFmModule, syncModule)
   }
 }
