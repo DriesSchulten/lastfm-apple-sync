@@ -1,5 +1,6 @@
 package me.schulten.sync
 
+import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -17,7 +18,8 @@ class SyncJob: Job, KoinComponent {
 
   private val syncService by inject<SyncService>()
 
-  override fun execute(context: JobExecutionContext?) {
+  override fun execute(context: JobExecutionContext?) = runBlocking {
     logger.info { "Starting sync job" }
+    syncService.sync()
   }
 }

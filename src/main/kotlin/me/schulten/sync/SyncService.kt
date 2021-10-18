@@ -27,8 +27,6 @@ class SyncServiceImpl(
 ) : SyncService {
 
   override suspend fun sync() {
-    logger.info { "Starting sync." }
-
     // Filtered albums
     val topAlbums = lastFmService.getTopAlbums()
       .filter { it.playcount >= appSettings.sync.minPlayCount }
