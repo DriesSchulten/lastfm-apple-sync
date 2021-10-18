@@ -14,12 +14,13 @@ private val logger = KotlinLogging.logger {}
  *
  * @author dries
  */
-class SyncJob: Job, KoinComponent {
+class SyncJob : Job, KoinComponent {
 
   private val syncService by inject<SyncService>()
 
   override fun execute(context: JobExecutionContext?) = runBlocking {
     logger.info { "Starting sync job" }
     syncService.sync()
+    logger.info { "Finished sync job" }
   }
 }

@@ -10,7 +10,7 @@ import io.ktor.response.respond
 import io.ktor.routing.Route
 import io.ktor.routing.get
 import io.ktor.routing.routing
-import me.schulten.applemusic.AppleMusicClient
+import me.schulten.sync.SyncJobScheduler
 import me.schulten.sync.SyncService
 import org.koin.ktor.ext.inject
 
@@ -22,10 +22,30 @@ fun Route.index() {
 
 fun Route.sync() {
   val syncService by inject<SyncService>()
+  val syncJobScheduler by inject<SyncJobScheduler>()
 
   get("/sync") {
-    syncService.sync()
-    call.respond(HttpStatusCode.NoContent)
+    val currentSync = syncService.currentSync
+
+    if (currentSync == null || !currentSync.running) {
+      syncJobScheduler.scheduleImmediately()
+      call.respond(HttpStatusCode.NoContent)
+    } else {
+      call.respond(HttpStatusCode.BadRequest)
+    }
+  }
+}
+
+fun Route.syncStatus() {
+  val syncService by inject<SyncService>()
+
+  get("/sync-status") {
+    val currentSync = syncService.currentSync
+    if (currentSync != null) {
+      call.respond(currentSync)
+    } else {
+      call.respond(HttpStatusCode.NotFound)
+    }
   }
 }
 
@@ -40,5 +60,6 @@ fun Application.registerMainRoutes() {
     index()
     static()
     sync()
+    syncStatus()
   }
 }
