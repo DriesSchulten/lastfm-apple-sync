@@ -5,8 +5,6 @@ import me.schulten.config.AppSettings
 import me.schulten.lastfm.LastFmService
 import mu.KotlinLogging
 
-private val logger = KotlinLogging.logger {}
-
 /**
  * Runs actual sync
  *
@@ -19,6 +17,8 @@ interface SyncService {
    */
   suspend fun sync()
 }
+
+private val logger = KotlinLogging.logger {}
 
 class SyncServiceImpl(
   private val appSettings: AppSettings,

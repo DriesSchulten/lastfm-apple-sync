@@ -14,15 +14,27 @@ import me.schulten.routes.registerMainRoutes
 import me.schulten.sync.syncModule
 import org.koin.dsl.module
 import org.koin.ktor.ext.Koin
+import org.koin.ktor.ext.KoinApplicationStarted
+import org.koin.ktor.ext.KoinApplicationStopPreparing
+import org.koin.ktor.ext.get
 import org.koin.logger.slf4jLogger
+import org.quartz.Scheduler
 
 fun Application.config() {
+  environment.monitor.subscribe(KoinApplicationStarted) {
+    get<Scheduler>().start()
+  }
+
   configureDI()
   configureSerialization()
   configureTemplating()
 
   registerMainRoutes()
   registerAppleMusicAuthRoutes()
+
+  environment.monitor.subscribe(KoinApplicationStopPreparing) {
+    get<Scheduler>().shutdown()
+  }
 }
 
 fun Application.configureSerialization() {

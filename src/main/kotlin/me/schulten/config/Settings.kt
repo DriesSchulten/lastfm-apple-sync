@@ -26,7 +26,8 @@ data class AppleMusic(
 )
 
 data class Sync(
-  val minPlayCount: Int
+  val minPlayCount: Int,
+  val cronSchedule: String
 )
 
 data class Storage(
