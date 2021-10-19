@@ -35,5 +35,5 @@ jobs:
         npm install
         npm run build
 
-    - name: Tests with Grale
+    - name: Tests with Gradle
       run: ./gradlew test
