@@ -12,3 +12,5 @@ Therefore switched the application to a web application in Kotlin using Ktor (bo
 
 * Member of the Apple Developer program and setup a MusicKit identifier and key as listed in [this documentation](https://developer.apple.com/documentation/applemusicapi/getting_keys_and_creating_tokens)
 * Last.fm API key/secret, can be obtained [here](https://www.last.fm/api/account/create)
+
+See the `application.conf` for required configuration values.
