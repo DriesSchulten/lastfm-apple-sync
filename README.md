@@ -24,3 +24,26 @@ account and obtain the tokens. When everything is set up revisiting the page all
 
 The sync runs through cron (with Quartz) as configured in the `application.conf`, to manually start the sync visit `http://localhost:8080/sync`, to show
 current (or last, if any) sync status overview go to `http://localhost:8080/sync-status`.
+
+## Docker
+
+Docker image, template `docker-compose.yml`:
+
+```yaml
+version: "3"
+
+# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
+services:
+  lastfm-apple-sync:
+    container_name: lastfm-apple-sync
+    image: driesschulten/lastfm-apply-sync:latest
+    ports:
+      - "8080:8080/tcp"
+    volumes:
+      - '<local dir>/:/app-etc/' # For the storage/key
+    restart: always
+    environment:
+      - LASTFM_API_KEY="<your key>"
+      - STORAGE_DIRECTOR="/app-etc/<your mount>"
+-     ...
+```
