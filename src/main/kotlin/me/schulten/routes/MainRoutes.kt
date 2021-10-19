@@ -4,6 +4,7 @@ import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.files
+import io.ktor.http.content.resources
 import io.ktor.http.content.static
 import io.ktor.mustache.MustacheContent
 import io.ktor.response.respond
@@ -51,7 +52,7 @@ fun Route.syncStatus() {
 
 fun Route.static() {
   static("assets") {
-    files("frontend/build")
+    resources("frontend")
   }
 }
 

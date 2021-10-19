@@ -19,6 +19,14 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
   kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi"
 }
 
+sourceSets {
+  main {
+    resources {
+      srcDir("build/resources/generated")
+    }
+  }
+}
+
 group = "me.schulten"
 version = "1.0-SNAPSHOT"
 
