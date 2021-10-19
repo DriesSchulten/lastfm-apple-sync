@@ -54,4 +54,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: driesschulten/lastfm-apply-sync:latest
+          tags: driesschulten/lastfm-apple-sync:latest

@@ -32,11 +32,10 @@ Docker image, template `docker-compose.yml`:
 ```yaml
 version: "3"
 
-# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
 services:
   lastfm-apple-sync:
     container_name: lastfm-apple-sync
-    image: driesschulten/lastfm-apply-sync:latest
+    image: driesschulten/lastfm-apple-sync:latest
     ports:
       - "8080:8080/tcp"
     volumes:
