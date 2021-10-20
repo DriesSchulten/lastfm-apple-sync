@@ -97,4 +97,21 @@ class AppleMusicClientTest {
     val client = AppleMusicClientImpl(mockEngine, appSettings, credentialHelper)
     client.addAlbumsToLibrary(ids)
   }
+
+  @Test(expected = ApiRateLimitException::class)
+  fun handleRateLimitErrorTest() = runBlocking {
+    val mockEngine = MockEngine {
+      respond(
+        content = "",
+        status = HttpStatusCode.TooManyRequests
+      )
+    }
+
+    val credentialHelper = mockk<AppleMusicCredentialHelper>()
+    every { credentialHelper.developerToken } returns "developer-token"
+    every { credentialHelper.userToken } returns "user-token"
+
+    val client = AppleMusicClientImpl(mockEngine, appSettings, credentialHelper)
+    client.addAlbumsToLibrary(emptyList())
+  }
 }

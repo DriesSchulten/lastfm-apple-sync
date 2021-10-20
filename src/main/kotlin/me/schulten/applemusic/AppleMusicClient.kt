@@ -2,6 +2,8 @@ package me.schulten.applemusic
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.features.ClientRequestException
+import io.ktor.client.features.HttpResponseValidator
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
@@ -10,6 +12,7 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.Json
 import me.schulten.config.AppSettings
 
@@ -44,6 +47,15 @@ class AppleMusicClientImpl(engine: HttpClientEngine, appSettings: AppSettings, p
       serializer = KotlinxSerializer(Json {
         ignoreUnknownKeys = true
       })
+    }
+    HttpResponseValidator {
+      handleResponseException { exception ->
+        if (exception !is ClientRequestException) return@handleResponseException
+        val exceptionResponse = exception.response
+        if (exceptionResponse.status == HttpStatusCode.TooManyRequests) {
+          throw ApiRateLimitException
+        }
+      }
     }
   }
 

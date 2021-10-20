@@ -49,3 +49,5 @@ object MissingUserCredentialsException: AppleMusicException("Missing Apple Music
 object ExpiredUserCredentialsException: AppleMusicException("Expired Apple Music user credentails, please re-authorize.")
 
 object MissingDeveloperCredentialsException: AppleMusicException("Missing Apple Music developer credentials")
+
+object ApiRateLimitException: AppleMusicException("Hit the Apple Music API rate limit")

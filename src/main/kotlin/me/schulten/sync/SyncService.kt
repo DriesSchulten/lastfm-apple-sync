@@ -65,7 +65,7 @@ class SyncServiceImpl(
       appleMusicService.addAlbumsToLibrary(toSync)
 
       logger.info { "Done! Added ${toSync.size} albums to personal collection." }
-    } catch (e: AppleMusicException) {
+    } catch (e: Exception) {
       logger.error { e.message }
       currentSync = currentSync?.copy(error = e.message)
     } finally {
