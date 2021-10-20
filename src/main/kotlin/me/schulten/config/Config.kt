@@ -52,11 +52,7 @@ fun Application.configureTemplating() {
 fun Application.configureDI() {
   val applicationModule = module {
     single {
-      val settings = ConfigLoader().loadConfigOrThrow<AppSettings>("/application.conf")
-
-      logger.info("Settings: $settings")
-
-      settings
+      ConfigLoader().loadConfigOrThrow<AppSettings>("/application.conf")
     }
   }
 

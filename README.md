@@ -27,7 +27,7 @@ current (or last, if any) sync status overview go to `http://localhost:8080/sync
 
 ## Docker
 
-[Docker image](https://hub.docker.com/repository/docker/driesschulten/lastfm-apple-sync), a template for `docker-compose.yml`:
+[Docker image](https://hub.docker.com/repository/docker/driesschulten/lastfm-apple-sync) (also for RaspberryPI), a template for `docker-compose.yml`:
 
 ```yaml
 version: "3"
@@ -39,14 +39,14 @@ services:
     ports:
       - "8080:8080/tcp"
     volumes:
-      - '<local dir>/:/app-etc/' # For the storage/key
+      - '<local dir>:/app-etc' # For the storage/key
     restart: always
     environment:
-      - LASTFM_API_KEY="<your key>"
-      - LASTFM_SHARED_SECRET="<your secret>"
-      - LASTFM_USER="<user name>"
-      - APPLE_TEAM_ID="<your Team ID>>"
-      - APPLE_KEY_ID="<your Key ID>"
-      - APPLE_KEY_FILE="app-etc/<pad to key>"
-      - STORAGE_DIRECTORY="app-etc/<storage dir>>"
+      - LASTFM_API_KEY=<your key>
+      - LASTFM_SHARED_SECRET=<your secret>
+      - LASTFM_USER=<user name>
+      - APPLE_TEAM_ID=<your Team ID>>
+      - APPLE_KEY_ID=<your Key ID>
+      - APPLE_KEY_FILE=app-etc/<pad to key>
+      - STORAGE_DIRECTORY=app-etc/<storage dir>>
 ```
