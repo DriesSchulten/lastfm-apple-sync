@@ -60,7 +60,9 @@ dependencies {
   implementation("io.github.microutils:kotlin-logging:2.0.11")
 
   testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
+  testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
   testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
+  testImplementation("io.mockk:mockk:1.12.0")
 }
 
 application {

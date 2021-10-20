@@ -1,7 +1,7 @@
 package me.schulten.applemusic
 
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
@@ -35,11 +35,11 @@ interface AppleMusicClient {
   suspend fun addAlbumsToLibrary(ids: List<String>)
 }
 
-class AppleMusicClientImpl(private val appSettings: AppSettings, private val credentialHelper: AppleMusicCredentialHelper) : AppleMusicClient {
+class AppleMusicClientImpl(engine: HttpClientEngine, appSettings: AppSettings, private val credentialHelper: AppleMusicCredentialHelper) : AppleMusicClient {
 
   private val appleMusic = appSettings.appleMusic
 
-  private val httpClient = HttpClient(CIO) {
+  private val httpClient = HttpClient(engine) {
     install(JsonFeature) {
       serializer = KotlinxSerializer(Json {
         ignoreUnknownKeys = true

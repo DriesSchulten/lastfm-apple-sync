@@ -13,11 +13,41 @@ import kotlin.io.path.exists
 import kotlin.io.path.notExists
 
 /**
+ * Holds/upates Apple Music tokens
+ */
+interface AppleMusicCredentialHelper {
+  /**
+   * Current developer token
+   */
+  val developerToken: String
+
+  /**
+   * Current user token
+   */
+  val userToken: String
+
+  /**
+   * Store to use (based on user login)
+   */
+  val storefrontId: String
+
+  /**
+   * Set new user token
+   */
+  fun updateUserToken(userToken: UserToken)
+
+  /**
+   * Remove user token (disables connection)
+   */
+  fun deleteUserToken()
+}
+
+/**
  * Handles keeping track of Apple Music API credentials.
  *
  * @author dries
  */
-class AppleMusicCredentialHelper(private val appSettings: AppSettings, private val tokenGenerator: AppleMusicTokenGenerator) {
+class AppleMusicCredentialHelperImpl(appSettings: AppSettings, private val tokenGenerator: AppleMusicTokenGenerator) : AppleMusicCredentialHelper {
 
   private var tokens: AppleMusicTokens? = null
 
@@ -42,7 +72,7 @@ class AppleMusicCredentialHelper(private val appSettings: AppSettings, private v
     }
   }
 
-  val developerToken: String
+  override val developerToken: String
     get() {
       val currentToken = tokens
 
@@ -63,7 +93,7 @@ class AppleMusicCredentialHelper(private val appSettings: AppSettings, private v
       }
     }
 
-  val userToken: String
+  override val userToken: String
     get() {
       val currentToken = tokens
 
@@ -76,10 +106,10 @@ class AppleMusicCredentialHelper(private val appSettings: AppSettings, private v
       return currentToken.userToken
     }
 
-  val storefrontId: String
+  override val storefrontId: String
     get() = tokens?.storefrontId ?: throw MissingUserCredentialsException
 
-  fun updateUserToken(userToken: UserToken) {
+  override fun updateUserToken(userToken: UserToken) {
     val currentToken = tokens ?: throw MissingDeveloperCredentialsException
 
     // According to online sources a user token is valid for 6 months
@@ -89,7 +119,7 @@ class AppleMusicCredentialHelper(private val appSettings: AppSettings, private v
     storeTokens()
   }
 
-  fun deleteUserToken() {
+  override fun deleteUserToken() {
     val currentToken = tokens
     if (currentToken != null) {
       tokens = AppleMusicTokens(developerToken = currentToken.developerToken, developerTokenExpires = currentToken.developerTokenExpires)

@@ -11,4 +11,5 @@
   <logger name="io.netty" level="INFO"/>
   <logger name="com.zaxxer.hikari" level="INFO"/>
   <logger name="org.quartz" level="INFO"/>
+  <logger name="io.mockk" level="INFO"/>
 </configuration>
