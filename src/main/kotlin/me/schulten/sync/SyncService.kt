@@ -51,7 +51,7 @@ class SyncServiceImpl(
         val appleMusicAlbum = appleMusicService.findAlbum(lastFmAlbum.name, lastFmAlbum.artist.name)
 
         if (appleMusicAlbum == null) {
-          logger.warn { "No Apple Music album found for album '${lastFmAlbum.name}' and artist '${lastFmAlbum.artist}'." }
+          logger.warn { "No Apple Music album found for album '${lastFmAlbum.name}' and artist '${lastFmAlbum.artist.name}'." }
           currentSync = currentSync?.copy(notFound = (currentSync?.notFound ?: emptyList()) + SyncAlbum(lastFmAlbum.name, lastFmAlbum.artist.name))
         }
 

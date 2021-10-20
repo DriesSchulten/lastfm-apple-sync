@@ -48,8 +48,6 @@ dependencies {
   implementation("io.ktor:ktor-client-serialization:$ktorVersion")
   implementation("io.ktor:ktor-client-logging:$ktorVersion")
 
-  implementation("com.github.ben-manes.caffeine:caffeine:3.0.4")
-
   implementation("org.quartz-scheduler:quartz:2.3.2")
 
   implementation("com.auth0:java-jwt:3.18.2")
