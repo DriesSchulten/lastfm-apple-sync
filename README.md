@@ -17,13 +17,26 @@ application in Kotlin using Ktor (both client and server).
 
 See the `application.conf` for required configuration values.
 
-## Noteworthy API routes
+## Running locally
 
-To set up an Apple Music user token start the application and go to `http://localhost:8080/apple-music` to authorize the application to use your Apple Music
-account and obtain the tokens. When everything is set up revisiting the page allows to disconnect the application from your Apple Music account.
+Run the NPM build to generate the CSS (added as resource source-set to the Gradle build):
 
-The sync runs through cron (with Quartz) as configured in the `application.conf`, to manually start the sync visit `http://localhost:8080/sync`, to show
-current (or last, if any) sync status overview go to `http://localhost:8080/sync-status`.
+```shell
+cd frontend
+npm install
+npm run build
+```
+
+Either adjust the `application.conf` or provide the env vars required (see Docker compose template).
+
+Run the Gradle build:
+
+```shell
+./gradlew run
+```
+
+Open a browser on [`http://localhost:8080`](http://localhost:8080) and follow from there. The application will ask you to set up Apple Music tokens, follow this
+procedure. If tokens have been setup the main page allows you to manually trigger a sync and show the status of the last sync (when, any issues/errors).
 
 ## Docker
 

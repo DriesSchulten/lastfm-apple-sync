@@ -10,8 +10,9 @@ import java.time.LocalDateTime
 @Serializable
 data class SyncStatus(
   val startedAt: LocalDateTime,
-  val numerOfAlbums: Int,
+  val numberOfAlbums: Int,
   val notFound: List<SyncAlbum>,
+  val error: String?,
   val running: Boolean
 )
 

@@ -2,10 +2,125 @@
 <head>
   <link href="assets/main.css" rel="stylesheet" type="text/css">
   <title>Last.fm to Apple Music sync</title>
+
+  <meta name="apple-music-developer-token" content="{{model.developerToken}}">
+  <meta name="apple-music-app-name" content="Last.fm to Apple Music sync">
+  <meta name="apple-music-app-build" content="0.0.1">
 </head>
-<body class="dark">
-<div class="md:container md:mx-auto">
-  <h1>Last.fm to Apple Music sync</h1>
+<body>
+
+<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+  <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+    <div class="absolute inset-0 bg-gradient-to-r from-red-100 to-red-200 shadow-lg transform skew-y-12 sm:skew-y-0 sm:rotate-12 sm:rounded-3xl"></div>
+    <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20 space-y-6">
+      <h1>Last.fm to Apple Music sync</h1>
+      <p id="apple-music-setup" class="hidden">
+        Please setup the Apple Music connection <a href="/apple-music" class="underline text-red-500">here</a>.
+      </p>
+
+      <div id="sync-functions" class="space-py-4">
+        <p>
+          Sync is scheduled, manual sync can be triggered using the button.
+        </p>
+        <button id="sync-now" class="px-4 py-2 mt-2 bg-red-500 text-white hover:text-red-500 hover:bg-white rounded-2xl shadow-md">
+          Sync now
+        </button>
+      </div>
+
+      <div id="sync-status" class="space-py-2">
+        <p>Last sync: <span id="sync-running" class="font-bold">n/a</span></p>
+        <p id="sync-error" class="bg-red-500 hidden text-white px-2 py-2 rounded-lg mt-2"></p>
+        <p id="sync-not-found" class="bg-yellow-500 hidden text-white px-2 py-2 rounded-lg mt-2">
+        The following albums where not found on Apple Music:
+        <table class="table-auto w-full text-white mt-2">
+          <thead>
+          <tr>
+            <th class="border border-yellow-600 px-4 py-2 text-left">Artist</th>
+            <th class="border border-yellow-600 px-4 py-2 text-left">Album</th>
+          </tr>
+          </thead>
+          <tbody id="sync-not-found-rows">
+          </tbody>
+        </table>
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script src="https://js-cdn.music.apple.com/musickit/v1/musickit.js"></script>
+<script type="text/javascript">
+  document.addEventListener('musickitloaded', () => {
+    let music = MusicKit.getInstance();
+
+    if (!music.isAuthorized) {
+      document.getElementById('apple-music-setup').classList.toggle('hidden');
+      document.getElementById('sync-functions').classList.toggle('hidden');
+    }
+  });
+
+  document.getElementById('sync-now').onclick = () => {
+    fetch('sync').then(response => {
+      console.log(`Sync trigger: ${response.ok}`)
+    });
+  };
+
+  const syncRunning = document.getElementById('sync-running');
+  const syncError = document.getElementById('sync-error');
+  const syncNotFound = document.getElementById('sync-not-found');
+  const syncNotFoundRows = document.getElementById('sync-not-found-rows');
+
+  const tableCellClasses = ['border', 'border-yellow-600', 'px-4', 'py-2'];
+
+  const updateSyncStatus = () => {
+    fetch('sync-status').then(response => {
+      if (response.status === 404) {
+        syncRunning.innerText = 'n/a'
+      } else {
+        response.json().then(json => {
+          syncRunning.innerText = json.running ? `running now (${json.numberOfAlbums} albums)` : `${new Date(json.startedAt).toLocaleString()} (${json.numberOfAlbums} albums)`;
+
+          if (json.error !== null) {
+            syncError.classList.remove('hidden')
+            syncError.innerText = json.error;
+          } else {
+            syncError.classList.add('hidden');
+            syncError.innerText = '';
+          }
+
+          syncNotFoundRows.innerHTML = '';
+          if (json.notFound.length > 0) {
+            syncNotFound.classList.remove('hidden');
+
+            const rows = json.notFound.map(entry => {
+              const tr = document.createElement('tr')
+
+              const artist = document.createElement('td')
+              artist.classList.add(...tableCellClasses);
+              artist.innerText = entry.artist;
+
+              const album = document.createElement('td')
+              album.classList.add(...tableCellClasses);
+              album.innerText = entry.name;
+
+              tr.append(artist, album);
+              return tr;
+            });
+
+            syncNotFoundRows.append(...rows);
+          } else {
+            syncNotFound.classList.add('hidden');
+          }
+        })
+      }
+
+      setTimeout(() => updateSyncStatus(), 5000);
+    })
+  };
+
+  updateSyncStatus();
+
+</script>
+
 </body>
 </html>

@@ -42,8 +42,10 @@ data class DeveloperToken(
   val expires: LocalDateTime
 )
 
-object MissingUserCredentialsException: Exception("Missing Apple Music user credentails, please authorize.")
+abstract class AppleMusicException(message: String): Exception(message)
 
-object ExpiredUserCredentialsException: Exception("Expired Apple Music user credentails, please re-authorize.")
+object MissingUserCredentialsException: AppleMusicException("Missing Apple Music user credentails, please authorize.")
 
-object MissingDeveloperCredentialsException: Exception("Missing Apple Music developer credentials")
+object ExpiredUserCredentialsException: AppleMusicException("Expired Apple Music user credentails, please re-authorize.")
+
+object MissingDeveloperCredentialsException: AppleMusicException("Missing Apple Music developer credentials")

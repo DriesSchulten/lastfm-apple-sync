@@ -1,7 +1,9 @@
 package me.schulten.routes
 
+import com.auth0.jwt.exceptions.JWTCreationException
 import io.ktor.application.Application
 import io.ktor.application.call
+import io.ktor.application.log
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.files
 import io.ktor.http.content.resources
@@ -11,13 +13,27 @@ import io.ktor.response.respond
 import io.ktor.routing.Route
 import io.ktor.routing.get
 import io.ktor.routing.routing
+import me.schulten.applemusic.AppleMusicCredentialHelper
+import me.schulten.routes.viewmodels.AppleMusicUserAuthViewModel
+import me.schulten.sync.SyncAlbum
 import me.schulten.sync.SyncJobScheduler
 import me.schulten.sync.SyncService
+import me.schulten.sync.SyncStatus
 import org.koin.ktor.ext.inject
+import java.time.LocalDateTime
 
 fun Route.index() {
+  val credentialHelper by inject<AppleMusicCredentialHelper>()
+
   get("/") {
-    call.respond(MustacheContent("index.hbs", null))
+    try {
+      val token = credentialHelper.developerToken
+      val viewModel = AppleMusicUserAuthViewModel(token)
+      call.respond(MustacheContent("index.hbs", mapOf("model" to viewModel)))
+    } catch (e: JWTCreationException) {
+      call.application.log.error("Error creating JWT for Apple Music", e)
+      call.respond(HttpStatusCode.InternalServerError)
+    }
   }
 }
 
