@@ -22,8 +22,8 @@ fun Route.appleMusicUserAuth() {
       val token = credentialHelper.developerToken
       val viewModel = AppleMusicUserAuthViewModel(token)
       call.respond(MustacheContent("apple-music-user-auth.hbs", mapOf("model" to viewModel)))
-    } catch (e: JWTCreationException) {
-      call.application.log.error("Error creating JWT for Apple Music", e)
+    } catch (e: Exception) {
+      call.application.log.error("Error getting/creating Apple Music developer token", e)
       call.respond(HttpStatusCode.InternalServerError)
     }
   }
