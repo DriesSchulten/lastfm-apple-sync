@@ -40,6 +40,12 @@ jobs:
       - name: Build distribution
         run: ./gradlew installDist
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: driesschulten/lastfm-apple-sync
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -57,5 +63,6 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64,linux/arm
-          push: true
-          tags: driesschulten/lastfm-apple-sync:latest
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
