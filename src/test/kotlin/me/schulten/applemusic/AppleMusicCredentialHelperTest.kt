@@ -4,8 +4,9 @@ import io.mockk.every
 import io.mockk.mockk
 import me.schulten.config.*
 import me.schulten.lastfm.Period
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.nio.file.Files
 import java.time.LocalDateTime
 import kotlin.io.path.Path
@@ -27,67 +28,73 @@ class AppleMusicCredentialHelperTest {
   )
 
   @Test
-  fun developerTokenValidTest() = run("/apple-tokens-valid.json") { helper ->
-    Assert.assertEquals("developer-token", helper.developerToken)
+  fun `the developer token should be returned if present and not expired`() = run("/apple-tokens-valid.json") { helper ->
+    assertEquals("developer-token", helper.developerToken)
   }
 
   @Test
-  fun developerTokenExpiredTest() {
+  fun `the developer token should be updated when it's expired`() {
     val updatedToken = "updated-token"
 
     val generator = mockk<AppleMusicTokenGenerator>()
     every { generator.generateToken() } returns DeveloperToken(updatedToken, LocalDateTime.now().plusDays(30))
 
     run(tokenFile = "/apple-tokens-expired.json", generator = generator) { helper ->
-      Assert.assertEquals(updatedToken, helper.developerToken)
+      assertEquals(updatedToken, helper.developerToken)
     }
   }
 
   @Test
-  fun developerTokenGeneratesIfAbsentTest() {
+  fun `the developer token should be generated when it's null`() {
     val newToken = "newly-generated-token"
 
     val generator = mockk<AppleMusicTokenGenerator>()
     every { generator.generateToken() } returns DeveloperToken(newToken, LocalDateTime.now().plusDays(30))
 
     run(generator = generator) { helper ->
-      Assert.assertEquals(newToken, helper.developerToken)
+      assertEquals(newToken, helper.developerToken)
     }
   }
 
   @Test
-  fun userTokenValidTest() = run("/apple-tokens-valid.json") { helper ->
-    Assert.assertEquals("user-token", helper.userToken)
-  }
-
-  @Test(expected = ExpiredUserCredentialsException::class)
-  fun userTokenExpiredTest() = run("/apple-tokens-expired.json") { helper ->
-    helper.userToken
-  }
-
-  @Test(expected = MissingUserCredentialsException::class)
-  fun userTokenIsAbsentTest() = run { helper ->
-    helper.userToken
+  fun `the user token should be returned if present and valid`() = run("/apple-tokens-valid.json") { helper ->
+    assertEquals("user-token", helper.userToken)
   }
 
   @Test
-  fun storeFrontIdTest() = run("/apple-tokens-valid.json") { helper ->
-    Assert.assertEquals("nl", helper.storefrontId)
+  fun `an exception should be thrown when the user token is expired`() = run("/apple-tokens-expired.json") { helper ->
+    assertThrows<ExpiredUserCredentialsException> {
+      helper.userToken
+    }
   }
 
   @Test
-  fun updateUserTokenTest() = run("/apple-tokens-valid.json") { helper ->
+  fun `an exception should be thrown when the user token is null`() = run { helper ->
+    assertThrows<MissingUserCredentialsException> {
+      helper.userToken
+    }
+  }
+
+  @Test
+  fun `the storefront id should be returned when present`() = run("/apple-tokens-valid.json") { helper ->
+    assertEquals("nl", helper.storefrontId)
+  }
+
+  @Test
+  fun `the new user tokens should be updated and subsequently returned`() = run("/apple-tokens-valid.json") { helper ->
     val newToken = UserToken("abc", "en")
     helper.updateUserToken(newToken)
 
-    Assert.assertEquals(newToken.token, helper.userToken)
-    Assert.assertEquals(newToken.storefrontId, helper.storefrontId)
+    assertEquals(newToken.token, helper.userToken)
+    assertEquals(newToken.storefrontId, helper.storefrontId)
   }
 
-  @Test(expected = MissingUserCredentialsException::class)
-  fun deleteUserTokenTest() = run("/apple-tokens-valid.json") { helper ->
+  @Test
+  fun `the user tokens should be deleted`() = run("/apple-tokens-valid.json") { helper ->
     helper.deleteUserToken()
-    helper.userToken
+    assertThrows<MissingUserCredentialsException> {
+      helper.userToken
+    }
   }
 
   private fun run(

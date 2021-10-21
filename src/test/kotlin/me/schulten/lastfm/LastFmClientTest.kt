@@ -9,8 +9,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import me.schulten.config.*
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import java.lang.Integer.min
 import kotlin.math.ceil
 
@@ -28,15 +28,15 @@ class LastFmClientTest {
   )
 
   @Test
-  fun getTopAlbumsTest() = runBlocking {
+  fun `get top albums should return a list of albums`() = runBlocking {
     val mockEngine = MockEngine { request ->
-      Assert.assertEquals(appSettings.lastFm.apiKey, request.url.parameters["api_key"])
-      Assert.assertEquals("json", request.url.parameters["format"])
-      Assert.assertEquals("user.gettopalbums", request.url.parameters["method"])
+      assertEquals(appSettings.lastFm.apiKey, request.url.parameters["api_key"])
+      assertEquals("json", request.url.parameters["format"])
+      assertEquals("user.gettopalbums", request.url.parameters["method"])
 
-      Assert.assertEquals("1", request.url.parameters["page"])
-      Assert.assertEquals(appSettings.lastFm.user, request.url.parameters["user"])
-      Assert.assertEquals(appSettings.lastFm.topAlbumPeriod.argName, request.url.parameters["period"])
+      assertEquals("1", request.url.parameters["page"])
+      assertEquals(appSettings.lastFm.user, request.url.parameters["user"])
+      assertEquals(appSettings.lastFm.topAlbumPeriod.argName, request.url.parameters["period"])
 
       respond(
         content = ByteReadChannel(Json.encodeToString(topAlbumsResult())),
@@ -47,13 +47,13 @@ class LastFmClientTest {
     val client = LastFmClientImpl(mockEngine, appSettings)
     val result = client.getTopAlbums(appSettings.lastFm.user, appSettings.lastFm.topAlbumPeriod)
 
-    Assert.assertEquals(1, result.size)
-    Assert.assertEquals("Album 0", result[0].name)
-    Assert.assertEquals("Artist 0", result[0].artist.name)
+    assertEquals(1, result.size)
+    assertEquals("Album 0", result[0].name)
+    assertEquals("Artist 0", result[0].artist.name)
   }
 
   @Test
-  fun getTopAlbumsPagedTest() = runBlocking {
+  fun `get top albums with paging should request all pages and return a unified list of results`() = runBlocking {
     val mockEngine = MockEngine { request ->
       val page = request.url.parameters["page"]!!.toInt()
 
@@ -66,7 +66,7 @@ class LastFmClientTest {
     val client = LastFmClientImpl(mockEngine, appSettings)
     val result = client.getTopAlbums(appSettings.lastFm.user, appSettings.lastFm.topAlbumPeriod)
 
-    Assert.assertEquals(25, result.size)
+    assertEquals(25, result.size)
   }
 
   private fun topAlbumsResult(page: Int = 1, perPage: Int = 1, total: Int = 1) = TopAlbumsResult(

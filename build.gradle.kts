@@ -2,6 +2,7 @@ val ktorVersion: String = "1.6.4"
 val koinVersion: String = "3.1.2"
 val logbackVersion: String = "1.2.6"
 val kotlinVersion: String = "1.5.31"
+val junitVersion: String = "5.8.1"
 
 plugins {
   kotlin("jvm") version "1.5.31"
@@ -72,6 +73,9 @@ dependencies {
   implementation("ch.qos.logback:logback-classic:$logbackVersion")
   implementation("io.github.microutils:kotlin-logging:2.0.11")
 
+  testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+
   testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
   testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
   testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
@@ -80,4 +84,10 @@ dependencies {
 
 application {
   mainClass.set("me.schulten.ApplicationKt")
+}
+
+tasks {
+  test {
+    useJUnitPlatform()
+  }
 }

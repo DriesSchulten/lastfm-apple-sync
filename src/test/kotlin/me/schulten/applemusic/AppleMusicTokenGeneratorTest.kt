@@ -2,8 +2,9 @@ package me.schulten.applemusic
 
 import me.schulten.config.*
 import me.schulten.lastfm.Period
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.nio.file.NoSuchFileException
 import java.time.LocalDateTime
 
@@ -26,13 +27,15 @@ class AppleMusicTokenGeneratorTest {
   )
 
   @Test
-  fun generateTokenTest() {
+  fun `generate token should provide a developer token`() {
     val token = AppleMusicTokenGenerator(appSettings(testKeyPath)).generateToken()
-    Assert.assertTrue(token.expires.isAfter(LocalDateTime.now().plusMonths(6).minusDays(2)))
+    assertTrue(token.expires.isAfter(LocalDateTime.now().plusMonths(6).minusDays(2)))
   }
 
-  @Test(expected = NoSuchFileException::class)
-  fun generateTokenMissingKeyFileTest() {
-    AppleMusicTokenGenerator(appSettings("not-a-path-to-a-key")).generateToken()
+  @Test
+  fun `generate token should throw an exception when the key file is missing`() {
+    assertThrows<NoSuchFileException> {
+      AppleMusicTokenGenerator(appSettings("not-a-path-to-a-key")).generateToken()
+    }
   }
 }

@@ -13,8 +13,9 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import me.schulten.config.*
 import me.schulten.lastfm.Period
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 /**
  * Apple Music API client tests
@@ -31,7 +32,7 @@ class AppleMusicClientTest {
   )
 
   @Test
-  fun searchAlbumTest() = runBlocking {
+  fun `search albums when should return the albums found`() = runBlocking {
     val artist = "artist"
     val album = "album"
 
@@ -52,10 +53,10 @@ class AppleMusicClientTest {
     val developToken = "developer-token"
 
     val mockEngine = MockEngine { request ->
-      Assert.assertEquals("Bearer $developToken", request.headers[HttpHeaders.Authorization])
-      Assert.assertEquals("0", request.url.parameters["offset"])
-      Assert.assertEquals("$artist $album", request.url.parameters["term"])
-      Assert.assertEquals("albums", request.url.parameters["types"])
+      assertEquals("Bearer $developToken", request.headers[HttpHeaders.Authorization])
+      assertEquals("0", request.url.parameters["offset"])
+      assertEquals("$artist $album", request.url.parameters["term"])
+      assertEquals("albums", request.url.parameters["types"])
 
       respond(
         content = ByteReadChannel(Json.encodeToString(response)),
@@ -70,19 +71,19 @@ class AppleMusicClientTest {
     val client = AppleMusicClientImpl(mockEngine, appSettings, credentialHelper)
     val result = client.searchAlbum("$artist $album", 0)
 
-    Assert.assertEquals(response.results.albums.data, result.data)
+    assertEquals(response.results.albums.data, result.data)
   }
 
   @Test
-  fun addAlbumsToLibraryTest() = runBlocking {
+  fun `add albums to library should call the API with all album id's to be added`() = runBlocking {
     val ids = listOf("a", "b", "c")
     val developToken = "developer-token"
     val userToken = "user-token"
 
     val mockEngine = MockEngine { request ->
-      Assert.assertEquals("Bearer $developToken", request.headers[HttpHeaders.Authorization])
-      Assert.assertEquals(userToken, request.headers["Music-User-Token"])
-      Assert.assertEquals(ids.joinToString(","), request.url.parameters["ids[albums]"])
+      assertEquals("Bearer $developToken", request.headers[HttpHeaders.Authorization])
+      assertEquals(userToken, request.headers["Music-User-Token"])
+      assertEquals(ids.joinToString(","), request.url.parameters["ids[albums]"])
 
       respond(
         content = "",
@@ -98,8 +99,8 @@ class AppleMusicClientTest {
     client.addAlbumsToLibrary(ids)
   }
 
-  @Test(expected = ApiRateLimitException::class)
-  fun handleRateLimitErrorTest() = runBlocking {
+  @Test
+  fun `a rate limit (429) error should be thrown`(): Unit = runBlocking {
     val mockEngine = MockEngine {
       respond(
         content = "",
@@ -112,6 +113,9 @@ class AppleMusicClientTest {
     every { credentialHelper.userToken } returns "user-token"
 
     val client = AppleMusicClientImpl(mockEngine, appSettings, credentialHelper)
-    client.addAlbumsToLibrary(emptyList())
+
+    assertThrows<ApiRateLimitException> {
+      client.addAlbumsToLibrary(emptyList())
+    }
   }
 }

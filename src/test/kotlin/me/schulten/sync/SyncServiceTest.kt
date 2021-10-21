@@ -13,8 +13,8 @@ import me.schulten.lastfm.Album
 import me.schulten.lastfm.Artist
 import me.schulten.lastfm.LastFmService
 import me.schulten.lastfm.Period
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 
 /**
  * Tests sync service
@@ -31,7 +31,7 @@ class SyncServiceTest {
   )
 
   @Test
-  fun syncTest() = runBlocking {
+  fun `sync should add new albums to user library`() = runBlocking {
     val lastFmService = mockk<LastFmService>()
     val appleMusicService = mockk<AppleMusicService>()
 
@@ -73,15 +73,15 @@ class SyncServiceTest {
     }
 
     // Status should reflect what happened
-    Assert.assertNotNull(status)
-    Assert.assertEquals(2, status!!.numberOfAlbums)
-    Assert.assertEquals(1, status.notFound.size)
-    Assert.assertEquals("Album 3", status.notFound[0].name)
-    Assert.assertNull(status.error)
+    assertNotNull(status)
+    assertEquals(2, status!!.numberOfAlbums)
+    assertEquals(1, status.notFound.size)
+    assertEquals("Album 3", status.notFound[0].name)
+    assertNull(status.error)
   }
 
   @Test
-  fun syncErrorTest() = runBlocking {
+  fun `sync status should reflect error`() = runBlocking {
     val lastFmService = mockk<LastFmService>()
     val appleMusicService = mockk<AppleMusicService>()
 
@@ -95,7 +95,7 @@ class SyncServiceTest {
     service.sync()
 
     val status = service.currentSync
-    Assert.assertNotNull(status?.error)
+    assertNotNull(status?.error)
   }
 
 }

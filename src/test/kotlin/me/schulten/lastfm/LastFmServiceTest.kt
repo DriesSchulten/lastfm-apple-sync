@@ -4,8 +4,8 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import me.schulten.config.*
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 /**
  * Last.fm service tests
@@ -22,7 +22,7 @@ class LastFmServiceTest {
   )
 
   @Test
-  fun getTopAlbumsTest() = runBlocking {
+  fun `get top albums should return a list of albums`() = runBlocking {
     val client = mockk<LastFmClient>()
     val service = LastFmServiceImpl(appSettings, client)
 
@@ -30,7 +30,7 @@ class LastFmServiceTest {
       Album("1", "Album", 2, Artist("1", "Artist"))
     )
 
-    Assert.assertEquals(1, service.getTopAlbums().size)
+    assertEquals(1, service.getTopAlbums().size)
   }
 
 }

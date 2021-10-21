@@ -5,8 +5,9 @@ import io.mockk.coJustRun
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
 
 /**
  * Tests for the Apple Music service
@@ -18,7 +19,7 @@ class AppleMusicServiceTest {
   private val client = mockk<AppleMusicClient>()
 
   @Test
-  fun findAlbumTest() = runBlocking {
+  fun `find album should return an album if found`() = runBlocking {
     val artist = "artist"
     val album = "album"
 
@@ -27,11 +28,11 @@ class AppleMusicServiceTest {
     val service = AppleMusicServiceImpl(client)
     val result = service.findAlbum(album, artist)
 
-    Assert.assertNotNull(result)
+    assertNotNull(result)
   }
 
   @Test
-  fun findAlbumPagedTest() = runBlocking {
+  fun `find album should traverse pages uuntil result found and return the result`() = runBlocking {
     val artist = "artist"
     val album = "album"
 
@@ -42,11 +43,11 @@ class AppleMusicServiceTest {
     val service = AppleMusicServiceImpl(client)
     val result = service.findAlbum(album, artist)
 
-    Assert.assertNotNull(result)
+    assertNotNull(result)
   }
 
   @Test
-  fun findAlbumNotFoundTest() = runBlocking {
+  fun `find album should return null when not found`() = runBlocking {
     val artist = "artist"
     val album = "album"
 
@@ -58,11 +59,11 @@ class AppleMusicServiceTest {
     val service = AppleMusicServiceImpl(client)
     val result = service.findAlbum(album, artist)
 
-    Assert.assertNull(result)
+    assertNull(result)
   }
 
   @Test
-  fun addAlbumToLibraryTest() = runBlocking {
+  fun `add library to album should split the albums to up into sub-lists and call the API for each sub-list`() = runBlocking {
     val albums = (0 until 20).map { idx -> Album("$idx", "https://link/$idx", AlbumAttributes("Album $idx", "Artist $idx", isSingle = false)) }
 
     coJustRun {
