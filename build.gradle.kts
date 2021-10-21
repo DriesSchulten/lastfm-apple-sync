@@ -6,6 +6,8 @@ val kotlinVersion: String = "1.5.31"
 plugins {
   kotlin("jvm") version "1.5.31"
   kotlin("plugin.serialization") version "1.5.31"
+  id("me.qoomon.git-versioning") version "5.1.1"
+
   application
 }
 
@@ -28,7 +30,20 @@ sourceSets {
 }
 
 group = "me.schulten"
-version = "1.0-SNAPSHOT"
+version = "0.0.0-SNAPSHOT"
+gitVersioning.apply {
+  refs {
+    branch(".+") {
+      version = "\${ref}-SNAPSHOT"
+    }
+    tag("v(?<version>.*)") {
+      version = "\${ref.version}"
+    }
+  }
+  rev {
+    version = "\${commit}"
+  }
+}
 
 repositories {
   mavenCentral()
