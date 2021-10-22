@@ -5,6 +5,6 @@ import me.schulten.config.config
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
-fun Application.module(testing: Boolean = false) {
+fun Application.module() {
   config()
 }

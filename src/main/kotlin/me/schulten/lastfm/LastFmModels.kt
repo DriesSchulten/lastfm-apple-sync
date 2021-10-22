@@ -3,12 +3,6 @@ package me.schulten.lastfm
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
-data class GetToken(val token: String)
-
-@Serializable
-data class GetSession(val name: String, val key: String, val subscriber: Int)
-
 enum class Period(val argName: String) {
   OVWRALL("overall"), WEEK("7day"), MONTH("1month"), QUARTER_YEAR("3month"), HALF_YEAR("6month"), YEAR("12month")
 }
