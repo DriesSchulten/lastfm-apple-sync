@@ -1,7 +1,5 @@
 module.exports = {
-  purge: [
-    '../src/main/resources/templates/*.hbs',
-  ],
+  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: false,
   theme: {
     extend: {},

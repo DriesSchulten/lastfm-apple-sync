@@ -25,7 +25,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 sourceSets {
   main {
     resources {
-      srcDir("build/resources/generated")
+      srcDir("frontend/build")
     }
   }
 }
