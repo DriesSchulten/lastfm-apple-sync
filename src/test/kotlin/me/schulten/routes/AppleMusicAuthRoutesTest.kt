@@ -7,7 +7,10 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
-import io.mockk.*
+import io.mockk.clearMocks
+import io.mockk.justRun
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import me.schulten.applemusic.AppleMusicCredentialHelper
@@ -18,7 +21,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.koin.core.module.Module
 import org.koin.dsl.module
-import kotlin.test.assertContains
 
 /**
  * Test the Apple Music auth routes
@@ -37,27 +39,6 @@ class AppleMusicAuthRoutesTest : AbstractRoutesTest() {
   @BeforeEach
   fun clearMocks() {
     clearMocks(credentialHelper)
-  }
-
-  @Test
-  fun `get main auth page should render template with developer token attached`() = withSyncTestApplication {
-    every { credentialHelper.developerToken } returns "the-developer-token"
-
-    val call = handleRequest(HttpMethod.Get, "/apple-music")
-    with(call) {
-      assertEquals(HttpStatusCode.OK, response.status())
-      assertContains(response.content!!, "the-developer-token")
-    }
-  }
-
-  @Test
-  fun `main auth page should give 500 when there is an issue with the developer token`() = withSyncTestApplication {
-    every { credentialHelper.developerToken } throws Exception("Test error")
-
-    val call = handleRequest(HttpMethod.Get, "/apple-music")
-    with(call) {
-      assertEquals(HttpStatusCode.InternalServerError, response.status())
-    }
   }
 
   @Test

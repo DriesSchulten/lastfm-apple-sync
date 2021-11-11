@@ -18,7 +18,6 @@ import org.junit.jupiter.api.TestInstance
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import java.time.LocalDateTime
-import kotlin.test.assertContains
 
 /**
  * Test the basic routes
@@ -45,20 +44,9 @@ class MainRoutesTest : AbstractRoutesTest() {
 
   @Test
   fun `static should serve frontend assets`() = withSyncTestApplication {
-    val call = handleRequest(HttpMethod.Get, "/assets/main.css")
-    with(call) {
-      assertEquals(HttpStatusCode.OK, response.status())
-    }
-  }
-
-  @Test
-  fun `index should render main template`() = withSyncTestApplication {
-    every { credentialHelper.developerToken } returns "the-developer-token"
-
     val call = handleRequest(HttpMethod.Get, "/")
     with(call) {
       assertEquals(HttpStatusCode.OK, response.status())
-      assertContains(response.content!!, "the-developer-token")
     }
   }
 
