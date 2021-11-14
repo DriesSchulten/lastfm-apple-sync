@@ -6,6 +6,8 @@ import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.HttpResponseValidator
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.parameter
@@ -29,7 +31,7 @@ interface AppleMusicClient {
    * @param offset The (optional) result offset (paging)
    * @return The [ResultContainer] containing found [Album]s
    */
-  suspend fun searchAlbum(name: String, offset: Int? = null): ResultContainer<Album>
+  suspend fun searchAlbum(name: String, offset: Int? = null): ResultContainer<Album>?
 
   /**
    * Add albums to the users library
@@ -43,6 +45,7 @@ class AppleMusicClientImpl(engine: HttpClientEngine, appSettings: AppSettings, p
   private val appleMusic = appSettings.appleMusic
 
   private val httpClient = HttpClient(engine) {
+    install(Logging)
     install(JsonFeature) {
       serializer = KotlinxSerializer(Json {
         ignoreUnknownKeys = true
@@ -59,7 +62,7 @@ class AppleMusicClientImpl(engine: HttpClientEngine, appSettings: AppSettings, p
     }
   }
 
-  override suspend fun searchAlbum(name: String, offset: Int?): ResultContainer<Album> {
+  override suspend fun searchAlbum(name: String, offset: Int?): ResultContainer<Album>? {
     val response = httpClient.get<SearchResponse>("${appleMusic.baseUrl}catalog/${credentialHelper.storefrontId}/search") {
       parameter("term", name)
       parameter("types", "albums")

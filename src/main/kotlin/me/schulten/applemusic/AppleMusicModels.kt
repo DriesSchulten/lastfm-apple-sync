@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 data class SearchResponse(val results: SearchResults)
 
 @Serializable
-data class SearchResults(val albums: ResultContainer<Album>)
+data class SearchResults(val albums: ResultContainer<Album>? = null)
 
 @Serializable
 data class ResultContainer<E>(val data: List<E>, val href: String, val next: String? = null)

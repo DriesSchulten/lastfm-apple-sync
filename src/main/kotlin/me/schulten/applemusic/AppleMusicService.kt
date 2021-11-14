@@ -31,14 +31,14 @@ class AppleMusicServiceImpl(private val appleMusicClient: AppleMusicClient) : Ap
     tailrec suspend fun findAlbumInternal(term: String, offset: Int? = null): Album? {
       val results = appleMusicClient.searchAlbum(term, offset)
 
-      val album = results.data.find { album ->
+      val album = results?.data?.find { album ->
         album.attributes.name.equals(name, ignoreCase = true)
           && album.attributes.artistName.equals(artistName, ignoreCase = true)
       }
 
       return if (album != null) {
         album
-      } else if (results.next != null) {
+      } else if (results?.next != null) {
         val nextOffset = URLBuilder(results.next).parameters["offset"]!!.toInt()
         findAlbumInternal(term, nextOffset)
       } else {

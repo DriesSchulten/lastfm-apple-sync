@@ -66,7 +66,7 @@ class SyncServiceImpl(
 
       logger.info { "Done! Added ${toSync.size} albums to personal collection." }
     } catch (e: Exception) {
-      logger.error { e.message }
+      logger.error(e) { e.message }
       currentSync = currentSync?.copy(error = e.message)
     } finally {
       currentSync = currentSync?.copy(running = false)

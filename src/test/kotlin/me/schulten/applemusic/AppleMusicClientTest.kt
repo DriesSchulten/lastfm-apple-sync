@@ -71,7 +71,7 @@ class AppleMusicClientTest {
     val client = AppleMusicClientImpl(mockEngine, appSettings, credentialHelper)
     val result = client.searchAlbum("$artist $album", 0)
 
-    assertEquals(response.results.albums.data, result.data)
+    assertEquals(response.results.albums?.data, result?.data)
   }
 
   @Test
