@@ -1,8 +1,8 @@
-val ktorVersion: String = "1.6.4"
-val koinVersion: String = "3.1.2"
-val logbackVersion: String = "1.2.6"
+val ktorVersion: String = "1.6.6"
+val koinVersion: String = "3.1.4"
+val logbackVersion: String = "1.2.7"
 val kotlinVersion: String = "1.5.31"
-val junitVersion: String = "5.8.1"
+val junitVersion: String = "5.8.2"
 
 plugins {
   kotlin("jvm") version "1.5.31"
@@ -68,10 +68,10 @@ dependencies {
 
   implementation("com.auth0:java-jwt:3.18.2")
 
-  implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.9")
+  implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.15")
 
   implementation("ch.qos.logback:logback-classic:$logbackVersion")
-  implementation("io.github.microutils:kotlin-logging:2.0.11")
+  implementation("io.github.microutils:kotlin-logging:2.1.0")
 
   testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
@@ -79,7 +79,7 @@ dependencies {
   testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
   testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
   testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
-  testImplementation("io.mockk:mockk:1.12.0")
+  testImplementation("io.mockk:mockk:1.12.1")
 }
 
 application {
